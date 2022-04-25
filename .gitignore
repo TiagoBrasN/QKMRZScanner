@@ -34,3 +34,4 @@ Carthage/Build
 
 # Other
 .DS_Store
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
