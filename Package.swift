@@ -35,7 +35,7 @@ let package = Package(
                 "Supporting Files/Info.plist",
             ],
             resources: [
-                .copy("Supporting Files/tessdata/ocrb.traineddata")
+                .copy("Supporting Files/tessdata")
             ]),
     ]
 )
