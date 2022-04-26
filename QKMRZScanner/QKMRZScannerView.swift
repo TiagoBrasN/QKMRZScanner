@@ -30,9 +30,7 @@ public class QKMRZScannerView: UIView {
     fileprivate var isScanningPaused = false
     fileprivate var observer: NSKeyValueObservation?
 
-    fileprivate var interfaceOrientation: UIInterfaceOrientation {
-        return UIApplication.shared.statusBarOrientation
-    }
+    fileprivate var interfaceOrientation: UIInterfaceOrientation = .landscapeLeft
 
     // MARK: Public properties
     @objc public dynamic var isScanning = false
@@ -41,6 +39,13 @@ public class QKMRZScannerView: UIView {
 
     public var cutoutRect: CGRect {
         return cutoutView.cutoutRect
+    }
+    
+    public init(orientation: UIInterfaceOrientation = .landscapeLeft) {
+        self.interfaceOrientation = orientation
+        
+        super.init(frame: UIScreen.main.bounds)
+        initialize()
     }
 
     // MARK: Initializers
