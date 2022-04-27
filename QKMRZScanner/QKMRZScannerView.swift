@@ -20,7 +20,7 @@ public protocol QKMRZScannerViewDelegate: AnyObject {
 // MARK: - QKMRZScannerView
 @IBDesignable
 public class QKMRZScannerView: UIView {
-    fileprivate var tesseract: Tesseract
+    fileprivate let tesseract: Tesseract
     fileprivate let mrzParser = QKMRZParser(ocrCorrection: true)
     fileprivate let captureSession = AVCaptureSession()
     fileprivate let videoOutput = AVCaptureVideoDataOutput()
