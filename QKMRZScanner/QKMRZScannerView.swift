@@ -20,7 +20,7 @@ public protocol QKMRZScannerViewDelegate: AnyObject {
 // MARK: - QKMRZScannerView
 @IBDesignable
 public class QKMRZScannerView: UIView {
-    fileprivate let tesseract = Tesseract(language: .custom("ocrb"), dataSource: Bundle.module, engineMode: .tesseractOnly)
+    fileprivate var tesseract: Tesseract
     fileprivate let mrzParser = QKMRZParser(ocrCorrection: true)
     fileprivate let captureSession = AVCaptureSession()
     fileprivate let videoOutput = AVCaptureVideoDataOutput()
@@ -41,7 +41,11 @@ public class QKMRZScannerView: UIView {
         return cutoutView.cutoutRect
     }
     
-    public init(orientation: UIInterfaceOrientation = .landscapeLeft) {
+    public init(dataSource: LanguageModelDataSource, orientation: UIInterfaceOrientation = .landscapeLeft) {
+        self.tesseract = Tesseract(
+            language: .custom("ocrb"),
+            dataSource: dataSource,
+            engineMode: .tesseractOnly)
         self.interfaceOrientation = orientation
         
         super.init(frame: UIScreen.main.bounds)
@@ -50,11 +54,19 @@ public class QKMRZScannerView: UIView {
 
     // MARK: Initializers
     override public init(frame: CGRect) {
+        self.tesseract = Tesseract(
+            language: .custom("ocrb"),
+            dataSource: Bundle.module,
+            engineMode: .tesseractOnly)
         super.init(frame: frame)
         initialize()
     }
     
     required public init?(coder aDecoder: NSCoder) {
+        self.tesseract = Tesseract(
+            language: .custom("ocrb"),
+            dataSource: Bundle.module,
+            engineMode: .tesseractOnly)
         super.init(coder: aDecoder)
         initialize()
     }
