@@ -20,7 +20,7 @@ public protocol QKMRZScannerViewDelegate: AnyObject {
 // MARK: - QKMRZScannerView
 @IBDesignable
 public class QKMRZScannerView: UIView {
-    fileprivate let tesseract = Tesseract(language: .custom("ocrb"), dataSource: Bundle.module, engineMode: .tesseractOnly)
+    fileprivate let tesseract: Tesseract
     fileprivate let mrzParser = QKMRZParser(ocrCorrection: true)
     fileprivate let captureSession = AVCaptureSession()
     fileprivate let videoOutput = AVCaptureVideoDataOutput()
@@ -30,9 +30,7 @@ public class QKMRZScannerView: UIView {
     fileprivate var isScanningPaused = false
     fileprivate var observer: NSKeyValueObservation?
 
-    fileprivate var interfaceOrientation: UIInterfaceOrientation {
-        return UIApplication.shared.statusBarOrientation
-    }
+    fileprivate var interfaceOrientation: UIInterfaceOrientation = .landscapeLeft
 
     // MARK: Public properties
     @objc public dynamic var isScanning = false
@@ -42,14 +40,33 @@ public class QKMRZScannerView: UIView {
     public var cutoutRect: CGRect {
         return cutoutView.cutoutRect
     }
+    
+    public init(dataSource: LanguageModelDataSource, orientation: UIInterfaceOrientation = .landscapeLeft) {
+        self.tesseract = Tesseract(
+            language: .custom("ocrb"),
+            dataSource: dataSource,
+            engineMode: .tesseractOnly)
+        self.interfaceOrientation = orientation
+        
+        super.init(frame: UIScreen.main.bounds)
+        initialize()
+    }
 
     // MARK: Initializers
     override public init(frame: CGRect) {
+        self.tesseract = Tesseract(
+            language: .custom("ocrb"),
+            dataSource: Bundle.module,
+            engineMode: .tesseractOnly)
         super.init(frame: frame)
         initialize()
     }
     
     required public init?(coder aDecoder: NSCoder) {
+        self.tesseract = Tesseract(
+            language: .custom("ocrb"),
+            dataSource: Bundle.module,
+            engineMode: .tesseractOnly)
         super.init(coder: aDecoder)
         initialize()
     }

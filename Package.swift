@@ -31,11 +31,10 @@ let package = Package(
             exclude: [
                 "../Pods",
                 "../ReadmeAssets",
-                "Supporting Files/QKMRZScanner.h",
                 "Supporting Files/Info.plist",
             ],
             resources: [
-                .copy("Supporting Files/tessdata/ocrb.traineddata")
+                .copy("Resources/tessdata")
             ]),
     ]
 )
