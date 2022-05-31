@@ -41,13 +41,17 @@ public class QKMRZScannerView: UIView {
         return cutoutView.cutoutRect
     }
     
-    public init(dataSource: LanguageModelDataSource, orientation: UIInterfaceOrientation = .landscapeLeft) {
+    public init(
+        dataSource: LanguageModelDataSource,
+        orientation: UIInterfaceOrientation = .landscapeLeft,
+        lockOrientation: Bool = false
+    ) {
         self.tesseract = Tesseract(
             language: .custom("ocrb"),
             dataSource: dataSource,
             engineMode: .tesseractOnly)
         self.interfaceOrientation = orientation
-        
+        self.cutoutView.alwaysDrawOverlayInLandscapeMode = lockOrientation
         super.init(frame: UIScreen.main.bounds)
         initialize()
     }

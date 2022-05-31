@@ -10,6 +10,8 @@ import UIKit
 class QKCutoutView: UIView {
     fileprivate(set) var cutoutRect: CGRect!
     
+    var alwaysDrawOverlayInLandscapeMode: Bool = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.black.withAlphaComponent(0.8)
@@ -27,7 +29,10 @@ class QKCutoutView: UIView {
         addBorderAroundCutout()
         
         let overlayTag = 563_139_562
-        let overlay = createOverlayView()
+        
+        let overlay = alwaysDrawOverlayInLandscapeMode ?
+        createOverlayViewLandscapeOnly() :
+        createOverlayView()
         overlay.tag = overlayTag
         
         // Add to superview as we can't to self as it's being masked
@@ -87,6 +92,74 @@ class QKCutoutView: UIView {
         return view
     }
     
+    var tlayer: CATextLayer?
+    private func createOverlayViewLandscapeOnly() -> UIView {
+        guard alwaysDrawOverlayInLandscapeMode && bounds.height > bounds.width else {
+            return createOverlayView()
+        }
+        let view = UIView(frame: bounds)
+        view.tag = 1001
+        view.backgroundColor = .clear
+        
+        let horizontalLineX = cutoutRect.minX + (cutoutRect.width * 0.29)
+        
+        // 1. Add horizontal line layer
+        view.layer.addSublayer({
+            let lineLayer = CAShapeLayer()
+            lineLayer.lineWidth = 2
+            lineLayer.strokeColor = UIColor.white.cgColor
+            lineLayer.frame = bounds
+            lineLayer.path = {
+                let path = UIBezierPath()
+                path.move(to: CGPoint(x: horizontalLineX, y: cutoutRect.minY))
+                path.addLine(to: CGPoint(x: horizontalLineX, y: cutoutRect.maxY))
+                
+                return path.cgPath
+            }()
+            
+            return lineLayer
+        }())
+        
+        // 2. Add 2 lines of "<<<<" text
+        view.layer.addSublayer({
+            let fontSize: CGFloat = 20
+            let font = UIFont.systemFont(ofSize: fontSize, weight: .semibold)
+            let stringCount = calculateMrzText(maxWidth: cutoutRect.height - 40, font: font)
+            let text = String(repeating: "<", count: stringCount) + "\n" + String(repeating: "<", count: stringCount)
+            let textSize = NSAttributedString(string: text, attributes: [.font: font]).size()
+            
+            var transform = CATransform3DMakeRotation(.pi * 0.5, 0, 0, 1)
+//            transform = CATransform3DTranslate(transform, 0, 0, 20)
+            transform = CATransform3DMakeAffineTransform(
+                CGAffineTransform(rotationAngle: .pi * 0.5)
+            )
+//            transform = CATransform3DIdentity
+//            var transform = CATransform3DMakeTranslation(20, cutoutRect.maxY, 0)
+//            transform = CATransform3DRotate(transform, .pi * -0.5, 0, 0, 1)
+            let textLayer = CATextLayer()
+            textLayer.alignmentMode = .center
+            textLayer.string = text
+            textLayer.font = font
+            textLayer.fontSize = fontSize
+            textLayer.contentsScale = UIScreen.main.scale
+            textLayer.foregroundColor = UIColor.white.cgColor
+            textLayer.transform = transform
+//            textLayer.backgroundColor = UIColor.red.withAlphaComponent(0.3).cgColor
+            textLayer.masksToBounds = false
+            textLayer.frame = CGRect(
+                x: (horizontalLineX - textSize.height * 0.5) * 0.5,
+                y: cutoutRect.minY,
+                width: textSize.height,
+                height: cutoutRect.height)
+//            textLayer.anchorPoint = CGPoint(x: textLayer.frame.midX, y: textLayer.frame.midY)
+            
+            tlayer = textLayer
+            return textLayer
+        }())
+        
+        return view
+    }
+    
     private func calculateMrzText(maxWidth: CGFloat, font: UIFont) -> Int {
         for i in (1...40).reversed() {
             let size = NSAttributedString(
@@ -107,13 +180,23 @@ class QKCutoutView: UIView {
         let documentFrameRatio = CGFloat(1.42) // Passport's size (ISO/IEC 7810 ID-3) is 125mm × 88mm
         let (width, height): (CGFloat, CGFloat)
 
-        if bounds.height > bounds.width {
-            width = (bounds.width * 0.9) // Fill 90% of the width
-            height = (width / documentFrameRatio)
-        }
-        else {
-            height = (bounds.height * 0.75) // Fill 75% of the height
-            width = (height * documentFrameRatio)
+        if alwaysDrawOverlayInLandscapeMode {
+            if bounds.height > bounds.width {
+                width = (bounds.width * 0.9) // Fill 90% of the width
+                height = (width * documentFrameRatio)
+            } else {
+                height = (bounds.height * 0.9) // Fill 90% of the height
+                width = height * documentFrameRatio
+            }
+        } else {
+            if bounds.height > bounds.width {
+                width = (bounds.width * 0.9) // Fill 90% of the width
+                height = (width / documentFrameRatio)
+            }
+            else {
+                height = (bounds.height * 0.75) // Fill 75% of the height
+                width = (height * documentFrameRatio)
+            }
         }
 
         let topOffset = (bounds.height - height) / 2
