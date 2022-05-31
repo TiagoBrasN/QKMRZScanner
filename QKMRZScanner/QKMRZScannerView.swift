@@ -11,6 +11,8 @@ import SwiftyTesseract
 import QKMRZParser
 import AudioToolbox
 import Vision
+import Accelerate
+import CoreGraphics
 
 // MARK: - QKMRZScannerViewDelegate
 public protocol QKMRZScannerViewDelegate: AnyObject {
@@ -29,6 +31,7 @@ public class QKMRZScannerView: UIView {
     fileprivate let cutoutView = QKCutoutView()
     fileprivate var isScanningPaused = false
     fileprivate var observer: NSKeyValueObservation?
+    fileprivate var lockOrientation: Bool = false
 
     fileprivate var interfaceOrientation: UIInterfaceOrientation = .landscapeLeft
 
@@ -51,6 +54,7 @@ public class QKMRZScannerView: UIView {
             dataSource: dataSource,
             engineMode: .tesseractOnly)
         self.interfaceOrientation = orientation
+        self.lockOrientation = lockOrientation
         self.cutoutView.alwaysDrawOverlayInLandscapeMode = lockOrientation
         super.init(frame: UIScreen.main.bounds)
         initialize()
@@ -110,6 +114,7 @@ public class QKMRZScannerView: UIView {
     // MARK: MRZ
     fileprivate func mrz(from cgImage: CGImage) -> QKMRZResult? {
         let mrzTextImage = UIImage(cgImage: preprocessImage(cgImage))
+        let image = mrzTextImage.rotatedImage(with: .pi * 0.5)
         let recognizedString = try? tesseract.performOCR(on: mrzTextImage).get()
         
         if let string = recognizedString, let mrzLines = mrzLines(from: string) {
@@ -149,7 +154,13 @@ public class QKMRZScannerView: UIView {
     
     fileprivate func documentImage(from cgImage: CGImage) -> CGImage {
         let croppingRect = cutoutRect(for: cgImage)
-        return cgImage.cropping(to: croppingRect) ?? cgImage
+        let image = cgImage.cropping(to: croppingRect) ?? cgImage
+        
+        if lockOrientation {
+            return UIImage(cgImage: image).rotatedImage(with: .pi * -0.5).cgImage ?? image
+        } else {
+            return image
+        }
     }
     
     fileprivate func enlargedDocumentImage(from cgImage: CGImage) -> UIImage {
@@ -319,4 +330,27 @@ extension QKMRZScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         try? imageRequestHandler.perform([detectTextRectangles])
     }
+}
+
+extension UIImage {
+    func rotatedImage(with angle: CGFloat = CGFloat.pi * 0.5) -> UIImage {
+        let updatedSize = CGRect(origin: .zero, size: size)
+            .applying(CGAffineTransform(rotationAngle: angle))
+            .size
+        
+        return UIGraphicsImageRenderer(size: updatedSize)
+            .image { _ in
+                let context = UIGraphicsGetCurrentContext()
+                context?.translateBy(x: updatedSize.width / 2.0, y: updatedSize.height / 2.0)
+                context?.rotate(by: angle)
+                
+                draw(in: CGRect(
+                    x: -size.width / 2.0,
+                    y: -size.height / 2.0,
+                    width: size.width,
+                    height: size.height))
+            }
+            .withRenderingMode(renderingMode)
+    }
+    
 }
