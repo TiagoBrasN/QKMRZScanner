@@ -114,7 +114,6 @@ public class QKMRZScannerView: UIView {
     // MARK: MRZ
     fileprivate func mrz(from cgImage: CGImage) -> QKMRZResult? {
         let mrzTextImage = UIImage(cgImage: preprocessImage(cgImage))
-        let image = mrzTextImage.rotatedImage(with: .pi * 0.5)
         let recognizedString = try? tesseract.performOCR(on: mrzTextImage).get()
         
         if let string = recognizedString, let mrzLines = mrzLines(from: string) {
@@ -145,7 +144,13 @@ public class QKMRZScannerView: UIView {
         let videoOrientation = videoPreviewLayer.connection!.videoOrientation
         
         if videoOrientation == .portrait || videoOrientation == .portraitUpsideDown {
-            return CGRect(x: (rect.minY * imageWidth), y: (rect.minX * imageHeight), width: (rect.height * imageWidth), height: (rect.width * imageHeight))
+            let width = (rect.height * imageWidth)
+            
+            return CGRect(
+                x: (rect.minY * imageWidth),
+                y: (rect.minX * imageHeight),
+                width: width * 0.3,
+                height: (rect.width * imageHeight))
         }
         else {
             return CGRect(x: (rect.minX * imageWidth), y: (rect.minY * imageHeight), width: (rect.width * imageWidth), height: (rect.height * imageHeight))
@@ -211,7 +216,7 @@ public class QKMRZScannerView: UIView {
     }
     
     fileprivate func initCaptureSession() {
-        captureSession.sessionPreset = .hd1920x1080
+        captureSession.sessionPreset = .hd1280x720
         
         guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
             print("Camera not accessible")
