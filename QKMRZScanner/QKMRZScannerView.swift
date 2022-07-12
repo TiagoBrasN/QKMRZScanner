@@ -149,11 +149,18 @@ public class QKMRZScannerView: UIView {
             return CGRect(
                 x: (rect.minY * imageWidth),
                 y: (rect.minX * imageHeight),
-                width: width * 0.3,
+                width: width * 0.4,
                 height: (rect.width * imageHeight))
         }
         else {
-            return CGRect(x: (rect.minX * imageWidth), y: (rect.minY * imageHeight), width: (rect.width * imageWidth), height: (rect.height * imageHeight))
+            let height = (rect.height * imageHeight)
+            let factor: CGFloat = 0.4
+            
+            return CGRect(
+                x: (rect.minX * imageWidth),
+                y: (rect.minY * imageHeight) + (height * (1 - factor)),
+                width: (rect.width * imageWidth),
+                height: height * factor)
         }
     }
     
@@ -312,7 +319,7 @@ extension QKMRZScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
             let mrzTextRectangles = results.map({ $0.boundingBox.applying(transform) }).filter({ $0.width > (imageWidth * 0.8) })
             let mrzRegionRect = mrzTextRectangles.reduce(into: CGRect.null, { $0 = $0.union($1) })
             
-            guard mrzRegionRect.height <= (imageHeight * 0.4) else { // Avoid processing the full image (can occur if there is a long text in the header)
+            guard mrzRegionRect.height <= (imageHeight * 0.5) else { // Avoid processing the full image (can occur if there is a long text in the header)
                 return
             }
             
