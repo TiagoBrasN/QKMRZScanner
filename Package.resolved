@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/TiagoBrasN/QKMRZParser",
       "state" : {
-        "revision" : "19305cc1c8ffabef25222b69b6fa779c8131a061",
-        "version" : "2.0.3"
+        "revision" : "afb2e0ad09c815dbe48116854593c0ccb89afad4",
+        "version" : "2.0.4"
       }
     },
     {
