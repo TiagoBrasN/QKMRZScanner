@@ -28,7 +28,7 @@
 		123BDEFF216FF0C2000CF6CF /* ocrb.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; path = ocrb.traineddata; sourceTree = "<group>"; };
 		124306302165512C000BE94A /* QKMRZScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QKMRZScannerView.swift; sourceTree = "<group>"; };
 		125C104E21767532009541D4 /* QKMRZScanResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QKMRZScanResult.swift; sourceTree = "<group>"; };
-		1277813E21653FB500070E1C /* QKMRZScanner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = QKMRZScanner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1277813E21653FB500070E1C /* _.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = _.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1277814121653FB500070E1C /* QKMRZScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QKMRZScanner.h; sourceTree = "<group>"; };
 		1277814221653FB500070E1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12832C232167492A00D132D4 /* AVCaptureVideoOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureVideoOrientation.swift; sourceTree = "<group>"; };
@@ -87,7 +87,7 @@
 		1277813F21653FB500070E1C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1277813E21653FB500070E1C /* QKMRZScanner.framework */,
+				1277813E21653FB500070E1C /* _.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -149,9 +149,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1277813D21653FB500070E1C /* QKMRZScanner */ = {
+		1277813D21653FB500070E1C /*   */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1277814621653FB500070E1C /* Build configuration list for PBXNativeTarget "QKMRZScanner" */;
+			buildConfigurationList = 1277814621653FB500070E1C /* Build configuration list for PBXNativeTarget " " */;
 			buildPhases = (
 				9143F24341060E1EC9EEDCA9 /* [CP] Check Pods Manifest.lock */,
 				1277813921653FB500070E1C /* Sources */,
@@ -163,12 +163,12 @@
 			);
 			dependencies = (
 			);
-			name = QKMRZScanner;
+			name = " ";
 			packageProductDependencies = (
 				A5A52E93282127E50052E386 /* QKMRZParser */,
 			);
 			productName = QKMRZScanner;
-			productReference = 1277813E21653FB500070E1C /* QKMRZScanner.framework */;
+			productReference = 1277813E21653FB500070E1C /* _.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -202,7 +202,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1277813D21653FB500070E1C /* QKMRZScanner */,
+				1277813D21653FB500070E1C /*   */,
 			);
 		};
 /* End PBXProject section */
@@ -453,7 +453,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1277814621653FB500070E1C /* Build configuration list for PBXNativeTarget "QKMRZScanner" */ = {
+		1277814621653FB500070E1C /* Build configuration list for PBXNativeTarget " " */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1277814721653FB500070E1C /* Debug */,
