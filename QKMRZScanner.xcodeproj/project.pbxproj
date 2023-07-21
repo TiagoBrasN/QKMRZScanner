@@ -440,8 +440,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/TiagoBrasN/QKMRZParser";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = revision;
+				revision = 69720b9f8941c97db401d95336be86dff6732657;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
