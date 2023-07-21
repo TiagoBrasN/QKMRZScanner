@@ -64,7 +64,7 @@ public class QKMRZScannerView: UIView {
     override public init(frame: CGRect) {
         self.tesseract = Tesseract(
             language: .custom("ocrb"),
-            dataSource: Bundle.module,
+            dataSource: Bundle.current.pathToTrainedData as! LanguageModelDataSource,
             engineMode: .tesseractOnly)
         super.init(frame: frame)
         initialize()
@@ -73,7 +73,7 @@ public class QKMRZScannerView: UIView {
     required public init?(coder aDecoder: NSCoder) {
         self.tesseract = Tesseract(
             language: .custom("ocrb"),
-            dataSource: Bundle.module,
+            dataSource: Bundle.current.pathToTrainedData as! LanguageModelDataSource,
             engineMode: .tesseractOnly)
         super.init(coder: aDecoder)
         initialize()
@@ -365,4 +365,10 @@ extension UIImage {
             .withRenderingMode(renderingMode)
     }
     
+}
+
+extension Bundle {
+    private class CurrentBundleClass {}
+    
+    static let current = Bundle(for: CurrentBundleClass.self)
 }
